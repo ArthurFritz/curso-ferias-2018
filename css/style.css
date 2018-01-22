@@ -1,5 +1,3 @@
-
-
 .link-name-group .left{
     float: left;
     padding-left: 150px;
@@ -29,4 +27,62 @@
     border: none!important;
     box-shadow: none!important;
     height: 45px;    
+}
+
+.diagrama img{
+    margin: 0px 0px!important;
+    background: none!important;
+    border: none!important;
+    box-shadow: none!important;
+    width: 610px;
+    float: left;
+    position: relative;
+    
+    left: -100px
+}
+
+.font-min{
+    font-size: 30px!important;
+}
+
+.font-minimun{
+    font-size: 20px!important;
+}
+
+.reveal pre{
+    width: 100%!important;
+}
+
+#detalheImg {
+    float: right;
+    width: 350px;
+    text-align: justify;
+}
+
+#altieresFoto{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    margin: 0px 0px!important;
+    background: none!important;
+    border: none!important;
+    box-shadow: none!important;
+    width: 91px;
+}
+
+#arthurFoto{
+    position: relative;
+    left: -240px;
+    top: 20px;
+    margin: 0px 0px!important;
+    background: none!important;
+    border: none!important;
+    box-shadow: none!important;
+    width: 91px;
+}
+
+#selTema{
+    position: fixed;
+    left: 10px;
+    bottom: 30px;
 }
