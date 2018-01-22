@@ -1,9 +1,8 @@
 {
-  "name": "reveal.js",
+  "name": "Curso de férias - 2018",
   "version": "3.6.0",
-  "description": "The HTML Presentation Framework",
-  "homepage": "http://revealjs.com",
-  "subdomain": "revealjs",
+  "description": "Talk Angular",
+  "homepage": "http://matera.com",
   "main": "js/reveal.js",
   "scripts": {
     "test": "grunt test",
@@ -11,9 +10,8 @@
     "build": "grunt"
   },
   "author": {
-    "name": "Hakim El Hattab",
-    "email": "hakim.elhattab@gmail.com",
-    "web": "http://hakim.se"
+    "name": "Arthur Fritz Santiago",
+    "email": "arthurfritzz@gmail.com"
   },
   "repository": {
     "type": "git",

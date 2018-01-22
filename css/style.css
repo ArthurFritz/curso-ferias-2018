@@ -1,0 +1,25 @@
+
+
+.link-name-group{
+    width: 250px;
+}
+
+.center{
+    text-align: center;
+    align-content: center;
+}
+
+.logo {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    text-align: center;
+}
+
+.logo img{
+    margin: 15px 0px!important;
+    background: none!important;
+    border: none!important;
+    box-shadow: none!important;
+    
+}
