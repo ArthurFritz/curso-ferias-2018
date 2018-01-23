@@ -86,3 +86,18 @@
     left: 10px;
     bottom: 30px;
 }
+
+.fotoGrande{
+    margin: -70px 0px 0px 0px!important;
+    background: none!important;
+    border: none!important;
+    position: absolute;
+    left: 0px;
+    height: 200px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+    -webkit-box-shadow: 3px 5px 22px -2px rgba(0,0,0,0.75)!important;
+    -moz-box-shadow: 3px 5px 22px -2px rgba(0,0,0,0.75)!important;
+    box-shadow: 3px 5px 22px -2px rgba(0,0,0,0.75)!important;
+}
