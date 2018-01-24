@@ -40,7 +40,7 @@
 
 				<section id="sumario">
 					<h5>Sumário</h5>
-						<ul class="font-min">
+						<ul class="font-min" align="justify">
 							<li class="fragment">Conceitos</li>
 							<ul>
 								<li class="fragment">Modules</li>
@@ -48,13 +48,16 @@
 								<li class="fragment">Rotas</li>
 								<li class="fragment">Layout</li>
 							</ul>
-							<br>
 							<li class="fragment">Hands-on</li>
 							<ul>
 								<li class="fragment">Criando Módulo</li>
 								<li class="fragment">Criando Componente</li>
 								<li class="fragment">Configurando Rotas</li>
 								<li class="fragment">Adicionando Layout</li>
+								<li class="fragment">Criando Módulo de Usuário</li>
+								<li class="fragment">Criando Componente de Consulta de Usuário</li>
+								<li class="fragment">Criando Componente de Formulário de Usuário</li>
+								<li class="fragment">Configurando Rota de Consulta de Usuário</li>
 							</ul>
 						</ul>
 				</section>
@@ -511,6 +514,7 @@
 									<button mat-icon-button >
 										<mat-icon>info</mat-icon>
 									</button>
+
 									<a mdLine>Relatório</a>
 								</mat-list-item>
 								</mat-nav-list>
@@ -569,18 +573,13 @@
 					<div class="fragment" data-markdown class="fragment" >
 						<script type="text/template">
 						```
-						.navSpan {
-							width: 100%;
-						}
-						button.user {
-							float:right;
-						}
-						.mat-drawer-container{
+						mat-sidenav-container{
 							position: fixed;
 							margin: 0px;
 							height: 100%;
 							width: 100%;
 						}
+						
 						#content{
 							position: fixed;
 							left: 0px;
@@ -594,7 +593,100 @@
 						</script>
 					</div>
 				</section>
-								
+				
+				<section id="moduloUsuario">
+					<h5>Modulo Usuário</h5>
+					<p class="fragment" align="justify">Para criarmos o módulo do usuário para seguir nossa arquitetura, precisamos estar dentro da pasta src/app/main</p>
+					<div class="fragment" data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						ng g module usuario
+						```
+						</script>
+					</div>
+					<p class="fragment" align="justify">Em nosso módulo haverá 2 componentes, Consulta e Formulário</p>
+				</section>
+
+				<section id="componentesUsuario">
+					<h5>Como criamos o componente?</h5>
+					<p class="fragment" align="justify">Para criarmos o componente para nosso usuário módule, precisamos estar dentro da pasta src/app/main/usuario</p>
+					<div class="fragment" data-markdown  >
+						<script type="text/template">
+						```
+						ng g component consulta
+						```
+						</script>
+					</div>
+					<br/>
+					<div class="fragment" data-markdown >
+						<script type="text/template">
+						```
+						ng g component formulario
+						```
+						</script>
+					</div>
+				</section>
+
+
+				<section id="rotaConsultaUsuario1" >
+					<h5>Agora vamos importar esses componentes</h5>
+					<p class="fragment" align="justify">Vamos importalos no main.module.ts pois iremos usar as rotas do main.routing.ts</p>
+					<div class="fragment" data-markdown  >
+						<script type="text/template">
+						```
+						...
+						import { ConsultaComponent } from './usuario/consulta/consulta.component';
+						import { FormularioComponent } from './usuario/formulario/formulario.component';
+						...
+						declarations: [MainComponent, ConsultaComponent, FormularioComponent]
+						...
+						```
+						</script>
+					</div>
+					<br/>
+				</section>
+
+
+				<section id="rotaConsultaUsuario2">
+					<h5>Adicionando a rota</h5>
+					<p class="fragment" align="justify">Então no nosso arquivo main.routing.ts vamor usar um atributo chamado children:</p>
+					<div class="fragment" data-markdown  >
+						<script type="text/template">
+						```
+						...
+						component: MainComponent,
+						children: [
+							{
+							path: 'usuario/consulta',
+							component: ConsultaComponent
+							}
+						]
+						...
+						```
+						</script>
+					</div>
+				</section>
+
+
+				<section id="ajustandoHTML">
+					<h5>Referenciando o click botão</h5>
+					<p class="fragment" align="justify">Vamos no arquivo main.component.html, utilizando o routerLink</p>
+					<div class="fragment" data-markdown  >
+						<script type="text/template">
+						```
+						...
+						<mat-list-item routerLink="/main/usuario/consulta" (click)="sidenav.close()">
+							<button mat-icon-button >
+								<mat-icon>info</mat-icon>
+							</button>
+							<a mdLine>Usuários</a>
+						</mat-list-item>
+						...
+						```
+						</script>
+					</div>
+				</section>
+				
 				<section id="Fim">
 						<h5>Até a próxima aula =)</h5>
 				</section>
@@ -626,8 +718,8 @@
 			});
 		</script>
 		<div class="logo">
-				<img onclick="showHide()" src="./img/logo.png" alt="matera">
-			</div>
+			<img onclick="showHide()" src="./img/logo.png" alt="matera">
+		</div>
 		<select id="selTema" onchange="changeTema(this.value);" style="display:none;">
 			<option value="solarized">Solarized</option>
 			<option value="beige">Beige</option>
