@@ -1,0 +1,455 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Curso de Férias - 2018 (Aula 03)</title>
+
+		<link rel="stylesheet" href="css/style.css">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link id="tema" rel="stylesheet" href="css/theme/solarized.css">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section class="center" id="home">
+					<h3>Curso de Férias Angular - Aula 03</h3>
+					<div class="link-name-group">
+						<a href="https://github.com/altitdb" target="blank" class="left">
+							@altitdb
+						</a>
+						<a href="https://github.com/arthurfritz" target="blank" class="right">
+							@arthurfritz
+						</a>
+					</div>
+				</section>
+
+				<section id="sumario">
+						<section>
+							<h5>Sumário Aula 03</h5>
+							<ul class="font-min" align="justify">
+								<li>Conceitos</li>
+								<ul>
+									<li>Variáveis</li>
+									<li>Elementos/Model</li>
+									<li>DataSource</li>
+								</ul>
+								<li>Hands-on</li>
+								<ul>
+									<li>Configurando Rota de Consulta de Usuário</li>
+									<li>Tabela de Consulta de Usuários</li>
+								</ul>
+							</ul>
+						</section>
+						<section>
+							<h5>Sumário Aula 04</h5>
+							<ul class="font-min" align="justify">
+								<li>Conceitos</li>
+								<ul>
+									<li>Formulários</li>
+									<li>Binding</li>
+									<li>Validadores</li>
+									<li>Mensagens de Erro</li>
+								</ul>
+								<li>Hands-on</li>
+								<ul>
+									<li>Adicionando Rota para Formulário de Usuário</li>
+									<li>Criando Formulário de Usuário</li>
+									<li>Criando ComboBox de Perfis</li>
+									<li>Adicionando Validações</li>
+									<li>Adicionando Mensagens de Erro</li>
+									<li>Validações Customizadas</li>
+								</ul>
+							</ul>
+						</section>
+				</section>
+				
+				<section id="variaveis">
+					<h5>Variáveis</h5>
+					<p class="font-min fragment" align="justify">
+						Ontem na nossa Table criamos 2 variáveis no arquivo consulta.component.ts
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							public displayedColumns = ['position', 'name', 'weight', 'symbol'];
+							public dataSource = new UsuarioDataSource();
+							```
+							</script>
+						</div>
+					</p>
+					<p class="font-min fragment" align="justify">
+						Variaveis com tipo, quando usamos a primeira letra maiuscula estamos usando "Wrapper" podendo gerar problema na build produção
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							enable:boolean = true;
+							curso:string = "Angular";
+							```
+							</script>
+						</div>
+					</p>
+					<p class="font-min fragment" align="justify">
+						Private, Protected, Public 
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							private enable:boolean;
+							protected enable:boolean;
+							public enable:boolean;
+							enable:boolean;
+							```
+							</script>
+						</div>
+					</p>
+				</section>
+
+				<section id="interfaceModel">
+					<h5>Interface/Model</h5>
+					<p class="font-min fragment" align="justify">
+						No caso do exemplo que copiamos ele usou a interface, para modelar o seu objeto de retorno consulta.component.ts, porém nas ultimas aulas podemos abordar sobre fazer uma interface, para providers.
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							export interface Element {
+								name: string;
+								position: number;
+								weight: number;
+								symbol: string;
+							}
+							```
+							</script>
+						</div>
+					</p>
+				</section>
+
+				<section id="interfaceModel">
+					<h5>DataSource</h5>
+					<p class="font-min fragment" align="justify">
+						No exemplo da dataTable, ele criar uma classe para simular uma request, e criar o DataSource da mat-table
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							export class UsuarioDataSource extends DataSource<any> {
+								connect(): Observable<Element[]> {
+									return Observable.of([
+									{position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
+									{position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
+									{position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'}
+									]);
+								}
+								disconnect() {}
+							}
+							```
+							</script>
+						</div>
+					</p>
+				</section>
+
+				<section id="hansOn">
+						<h5>Hands-on</h5>
+				</section>
+
+
+				<section id="ajusteTable">
+					<h5>Ajustar os campos da tabela</h5>
+					<p class="font-min fragment" align="justify">
+						Para ajustar os campos da nossa tabela, precisamos ajustar os seguintes items:
+						<ul  class="font-min fragment" align="justify">
+							<li>usuario.component.ts</li>
+							<li>usuario.component.html</li>
+						</ul>
+					</p>
+					<p class="font-min fragment" align="justify">
+						Nosso objeto terá os seguintes informações:
+						<ul  class="font-min fragment" align="justify">
+							<li>id - numero</li>
+							<li>nome - string</li>
+							<li>login - string</li>
+							<li>email - string</li>
+							<li>perfil - string</li>
+						</ul>
+					</p>
+				</section>
+
+				<section id="anyany">
+					<h5>Any?</h5>
+					<p>
+						Any pode isso arnold?
+					</p>
+				</section>
+
+
+				<section id="fabButton">
+					<h5>Adicionar um Fab</h5>
+					<p align="justify">
+						Vamos adicionar um fab-button para adicionar novos alunos
+					</p>
+				</section>
+				
+				<section id="fabCss">
+					<h5>Css</h5>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						.mat-fab{
+							position: fixed;
+							right: 20px;
+							bottom: 20px;
+						}					
+						```
+						</script>
+					</div>
+				</section>
+
+				<section id="formulario1">
+					<h5>Formulários</h5>
+					<p class="font-minimun" align="justify">
+						Para criação de formulário, fazemos utilizando reactive-forms, para termos mais dinamismo na criação e agilidade, tanto na criação e no tratamento dos seus dados:
+					</p>
+
+					<p class="fragment font-minimun" align="justify">
+						Ele é criado no arquivo TS, antes de haver sua renderização no DOM, sendo assim no contrutor, ngOnit ou em enventos que garanta a sua criação antes do HTML onde será mostrado
+					</p>
+
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						export class HeroDetailComponent4 {
+							heroForm: FormGroup;
+							states = states;
+						  
+							constructor(private fb: FormBuilder) {
+							  this.createForm();
+							}
+						  
+							createForm() {
+							  this.heroForm = this.fb.group({
+								name: ['', Validators.required ],
+								street: '',
+								city: '',
+								state: '',
+								zip: '',
+								power: '',
+								sidekick: ''
+							  });
+							}
+						  }
+						```
+						</script>
+					</div>
+				</section>
+
+				<section id="formulario2">
+					<h5>HTML FORMULÁRIO</h5>
+					<p class="font-min fragment" align="justify">
+						Em nosso html, normalmente teremos na tag form a propriedade definindo nosso groupForm [formGroup]="heroForm"
+					</p>
+
+					<p class="font-min fragment" align="justify">
+						E em nossos input teremos uma propriedade chamada formControlName="name" que realiza o vinculo do input com a propriedade do form
+					</p>
+
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<form [formGroup]="heroForm" fxLayout="column">
+							<mat-form-field fxFlex="100"> 
+								<input matInput formControlName="name" placeholder="Nome">
+							</mat-form-field>
+						</form>
+						```
+						</script>
+					</div>
+					<p class="font-minimun" ><a href="https://angular.io/guide/reactive-forms" target="_blank">Documentação</a></p>
+				</section>
+				
+				<section id="Binding">
+					<h5>Binding</h5>
+					<p align="justify">O Bind é feito no angular através dos []</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<mat-form-field fxFlex="47"> 
+							<mat-select formControlName="perfil" placeholder="Perfil">
+								<mat-option *ngFor="let perfil of perfis" [value]="perfil.id">
+									{{ perfil.descricao }}
+								</mat-option>
+							</mat-select>
+						</mat-form-field>	
+						
+						
+						public perfis = [
+							{ id: "PROFESSOR", descricao: 'Professor' },
+							{ id: "ADMINISTRADOR", descricao: 'Administrador' },
+							{ id: "ALUNO", descricao: 'Aluno' },
+						];
+						```
+						</script>
+					</div>
+				</section>
+
+
+				<section id="validadores">
+					<h5>Validadores</h5>
+					<p align="justify">O Angular já tem alguns validatores, que temos para utilizarmos em nosso formulário, porém podemos criar os nossos validadores também:</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						import {AbstractControl} from '@angular/forms';
+
+						export class MoneyValidator {
+							public static validateMaxBrl = (maxValue:number) => {
+								return (c:AbstractControl) =>{
+								   return true ? null : {
+										maxValue: {
+											valid: false
+										}
+									};
+								}
+							}
+							public static validateBeforeZero(c:AbstractControl) {
+								return true ? null : {
+									beforeZero: {
+										valid: false
+									}
+								};
+							}
+						}
+						```
+						</script>
+					</div>
+					<p class="font-minimun" ><a href="https://angular.io/guide/form-validation" target="_blank">Documentação</a></p>
+				</section>
+
+
+				<section id="messagemErro">
+					<h5>Mensagens de Erro</h5>
+					<p align="justify">Nas mensagens de erros temos uma tag chamada <mat-error> porém temos que fazer um condicional vinculando ao nosso form para validar se exibiremos essa mensagem de erro.</p>
+					<p class="fragment font-minimun" align="justify">Porém é possivel modulizar, ou componentizar esse comportamento, podemos fazer isso mais para frente</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<mat-form-field fxFlex="100"> 
+							<input matInput formControlName="nome" placeholder="Nome">
+							<mat-error *ngIf="form.controls['nome'].hasError('required')">
+								Campo obrigatório
+							</mat-error>
+						</mat-form-field>
+						```
+						</script>
+					</div>
+					<p class="font-minimun" ><a href="https://angular.io/guide/form-validation" target="_blank">Documentação</a></p>
+				</section>
+
+
+				<section id="addRotaUsuario">
+					<h5>Adicionando Rota para Formulário de Usuário</h5>
+					<p>usuario/adicionar</p>
+
+					<h5>Incluir essa rota ao nosso FAB</h5>
+				</section>
+
+
+				<section id="formularioCreate">
+					<h5>Criando Formulário de Usuário</h5>
+					<p>Vamos fazer somente o HTML sem o vinculo do formulário</p>
+				</section>
+
+				<section id="criarNoTsListagem">
+					<h5>Criar no ts a listagem de perfis para combo</h5>
+					<ul>
+						<li>id PROFESSOR | descricao: Professor</li>
+						<li>id ADMINISTRADOR | descricao: Administrador</li>
+						<li>id ALUNO | descricao: Aluno</li>
+					</ul>
+				</section>
+
+				<section id="ajustarSelect">
+					<h5>Ajustar nosso select</h5>
+					<p> Vamos usar um diretiva para isso qual é mesmo ?</p>
+				</section>
+
+
+				<section id="criarFormGroup">
+					<h5>Vamos criar nosso formGroup</h5>
+					<p> Vamos deixar algumas validações simples depois vamos incrementando</p>
+				</section>
+	
+				<section id="ajustarHtmlValidacoes">
+					<h5>Vamos ajustar nosso HTML</h5>
+					<p>Vamos incluir mensagens de erros utilizando os status dos validators</p>
+				</section>
+
+
+				<section id="ajustarHtmlValidacoes">
+					<h5>Validators</h5>
+					<p>Validators.compose()</p>
+
+					<h5>Criando nosso validator</h5>
+				</section>
+	
+
+				<section id="formulario">
+					<h5>.... Mais contêudo ... ?</h5>
+				</section>
+
+
+
+			</div>
+		</div>
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+		<script>
+			function changeTema(val){
+				document.getElementById("tema").setAttribute("href","css/theme/"+val+".css");
+			}
+			function showHide(){
+				let item = document.getElementById("selTema").getAttribute("style");
+				if(item == "display:none;"){
+
+				}
+				document.getElementById("selTema").setAttribute("style",item == "display:none;" ? "" : "display:none;");
+			}
+		</script>
+		<script>
+			Reveal.initialize({
+				dependencies: [
+					{ src: 'plugin/markdown/marked.js' },
+					{ src: 'plugin/markdown/markdown.js' },
+					{ src: 'plugin/notes/notes.js', async: true },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+		</script>
+		<div class="logo">
+			<img onclick="showHide()" src="./img/logo.png" alt="matera">
+		</div>
+		<select id="selTema" onchange="changeTema(this.value);" style="display:none;">
+			<option value="solarized">Solarized</option>
+			<option value="beige">Beige</option>
+			<option value="black">Black</option>
+			<option value="blood">Blood</option>
+			<option value="league">League</option>
+			<option value="moon">Moon</option>
+			<option value="night">Night</option>
+			<option value="serif">Serif</option>
+			<option value="simple">Simple</option>
+			<option value="sky">Sky</option>
+			<option value="white">White</option>
+		</select>
+	</body>
+</html>
