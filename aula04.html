@@ -48,6 +48,7 @@
 							<li>Validadores</li>
 							<li>Mensagens de Erro</li>
 							<li>Array</li>
+							<li>Serviços</li>
 						</ul>
 						<li>Hands-on</li>
 						<ul>
@@ -268,30 +269,66 @@
 				</section>
 
 
+				<section id="servicos">
+					<h5>Serviços</h5>
+					<p class="font-min fragment" align="justify">
+						Serviços são arquivos TS que são singletons, injetáveis, e armazenão nossa regra de negócio, e que irá chamar nosso httpCliente
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							import { Injectable } from '@angular/core';
+							@Injectable()
+		
+							export class UsuarioService {
+								constructor() { }
+							}
+							```
+							</script>
+						</div>
+					</p>
+			</section>
+
+
 				<section id="handsOn">
 					<h5>Hands-On</h5>
 				</section>
 
 				<section id="botaoVoltarCancelar">
 					<h5>Incluir a rota no botão cancelar</h5>
-					<p>usuario/consultar</p>
-					<p>adicionar.component.ts</p>
+					<p> Vamos alterar o arquivo  /src/app/main/usuario/formulario/formulario.component.html</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<button mat-raised-button color="warn" routerLink="/main/usuario/consulta">Cancelar</button>
+						```
+						</script>
+					</div>
 				</section>
 
 
 				<section id="formularioCreate">
 					<h5>Criando box perfis</h5>
-					<p class="font-min fragment">Vamos uma variavel que será um array de objetos [{},{}] com nossos perfis</p>
-					<ul class="font-min fragment">
-						<li> id = PROFESSOR | descricao = Professor </li>
-						<li> id = ADMINISTRADOR | descricao = Administrador </li>
-						<li> id = ALUNO | descricao = Aluno </li>
-					</ul>
-					<p class="font-min fragment">Agora vamos ajustar nosso html, nosso select com a diretiva *ngFor</p>
+					<p class="font-min fragment" align="justify">Vamos uma variavel que será um array de objetos [{},{}] com nossos perfis, no arquivo formulario.component.ts</p>
 					<div data-markdown class="fragment" >
 						<script type="text/template">
 						```
-							<???? *ngFor="let i of items" [value]="i.???"> </???>
+						public perfis = [
+							{ id: "PROFESSOR", descricao: 'Professor' },
+							{ id: "ADMINISTRADOR", descricao: 'Administrador' },
+							{ id: "ALUNO", descricao: 'Aluno' },
+						];	
+						```
+						</script>
+					</div>
+					<p class="font-min fragment" align="justify">Agora vamos ajustar nosso html, nosso select com a diretiva *ngFor formulario.component.html</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<mat-select formControlName="perfil" placeholder="Perfil">
+							<mat-option *ngFor="let perfil of perfis" [value]="perfil.id">
+								{{ perfil.descricao }}
+							</mat-option>
+						</mat-select>
 						```
 						</script>
 					</div>
@@ -304,13 +341,28 @@
 						Para isto precisamos importar as seguintes Modulos, ReactiveFormsModule , FormsModule
 					</p>
 					<p class="font-min fragment" align="justify">
-						E também precisamos importar um providers, que será o FormBuilder
+						E também precisamos importar um providers, que será o FormBuilder, todas essas importações irão ocorrer no main.module.ts
 					</p>
+					<script type="text/template">
+					```
+					....
+					import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
+					....
+					imports: [
+						...
+						ReactiveFormsModule,
+						FormsModule
+					],
+					providers: [
+						FormBuilder
+					]
+					```
+					</script>
 				</section>
 
 
 				<section id="criarForm1">
-					<h5>Atualzando o TS</h5>
+					<h5>Atualzando o ts</h5>
 					<p class="font-min fragment" align="justify">
 						Agora precisamos criar uma variavel que será nosso FormGroup com nome form
 					</p>
@@ -333,25 +385,157 @@
 				</section>
 
 
+				<section id="criarForm1.1">
+					<h5>Ficando da seguinte forma</h5>
+					<p class="font-min fragment" align="justify">
+						Lembrando que no nosso objeto o primeiro parametro é seu valor default e o segundo nosso Validator
+					</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						constructor(private formBuilder: FormBuilder) {
+							this.form = formBuilder.group({
+								id: [null],
+								nome: [null, Validators.required],
+								email: [null, Validators.compose([Validators.required, Validators.email])],
+								login: [null, Validators.required],
+								perfil: [null, Validators.required],
+								senha: [null, Validators.required],
+								confirmacao: [null, Validators.required]
+							})
+						}
+						```
+						</script>
+					</div>
+				</section>
+
+
 				<section id="criarForm2">
 					<h5>Vinculando ao HTML</h5>
 					<p class="fragment" align="justify">
 						Usando o formGroup e formControlName
 					</p>
-					<p class="fragment" align="justify">
-						Verificando se o formulário é válido
-					</p>
 					<p class="font-min fragment" align="justify">
-						Vamos inserir algumas mensagens de erro para cada campo?
+						Ficando da seguinte forma
 						<div data-markdown class="fragment" >
 							<script type="text/template">
 							```
-							<mat-form-field> 
-								....
-								<mat-error *ngIf="form.controls['???'].hasError('required')">
+							<form [formGroup]="form" fxLayout="column">
+								<mat-form-field fxFlex="100"> 
+									<input matInput formControlName="nome" placeholder="Nome">
+								</mat-form-field>
+								<mat-form-field fxFlex="100"> 
+									<input matInput formControlName="email" placeholder="E-mail">
+								</mat-form-field>
+								<div fxFlex="100" fxLayout="row">
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="login" placeholder="Login">
+									</mat-form-field>
+									<span fxFlex="5"></span>
+									<mat-form-field fxFlex="47"> 
+										<mat-select formControlName="perfil" placeholder="Perfil">
+											<mat-option *ngFor="let perfil of perfis" [value]="perfil.id">
+											{{ perfil.descricao }}
+											</mat-option>
+										</mat-select>
+									</mat-form-field>
+								</div>
+								<div fxFlex="100" fxLayout="row">
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="senha" placeholder="Senha" type="password">
+									</mat-form-field>
+									<span fxFlex="5"></span>
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="confirmacao" placeholder="Confirmação" type="password">
+									</mat-form-field>
+								</div>
+								<div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between">
+									<button mat-raised-button color="primary" [disabled]="!form.valid">Salvar</button>
+									<button mat-raised-button color="warn" routerLink="/main/usuario/consulta">Cancelar</button>
+								</div>
+							</form>
+							```
+							</script>
+						</div>
+					</p>
+				</section>
+
+
+
+				<section id="criarForm2">
+					<h5>Mensagens de erro</h5>
+					<p class="font-min fragment" align="justify">
+						Para atribuirmos messagem de erro utilizaremos a seguinte tag dentro do nosso mat-form-field
+						<div data-markdown class="fragment" >
+								<script type="text/template">
+								```
+								<mat-error *ngIf="form.controls['nome'].hasError('required')">
 									Campo obrigatório
 								</mat-error>
-							</mat-form-field>
+								```
+							</script>
+						</div>
+					</p>
+					<p class="font-min fragment" align="justify">
+						Ficando da seguinte forma
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							<form [formGroup]="form" fxLayout="column">
+								<mat-form-field fxFlex="100"> 
+									<input matInput formControlName="nome" placeholder="Nome">
+									<mat-error *ngIf="form.controls['nome'].hasError('required')">
+										Campo obrigatório
+									</mat-error>
+								</mat-form-field>
+								<mat-form-field fxFlex="100"> 
+									<input matInput formControlName="email" placeholder="E-mail">
+									<mat-error *ngIf="form.controls['email'].hasError('required')">
+										Campo obrigatório
+									</mat-error>
+									<mat-error *ngIf="form.controls['email'].hasError('email') && !form.controls['email'].hasError('required')">
+										E-mail inválido
+									</mat-error>
+								</mat-form-field>
+								<div fxFlex="100" fxLayout="row">
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="login" placeholder="Login">
+									<mat-error *ngIf="form.controls['login'].hasError('required')">
+										Campo obrigatório
+									</mat-error>
+									</mat-form-field>
+									<span fxFlex="5"></span>
+									<mat-form-field fxFlex="47"> 
+										<mat-select formControlName="perfil" placeholder="Perfil">
+											<mat-option *ngFor="let perfil of perfis" [value]="perfil.id">
+											{{ perfil.descricao }}
+											</mat-option>
+										</mat-select>
+										<mat-error *ngIf="form.controls['perfil'].hasError('required')">
+										Campo obrigatório
+										</mat-error>
+									</mat-form-field>
+								</div>
+								<div fxFlex="100" fxLayout="row">
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="senha" placeholder="Senha" type="password">
+									<mat-error *ngIf="form.controls['senha'].hasError('required')">
+										Campo obrigatório
+									</mat-error>
+									</mat-form-field>
+									<span fxFlex="5"></span>
+									<mat-form-field fxFlex="47"> 
+									<input matInput formControlName="confirmacao" placeholder="Confirmação" type="password">
+									<mat-error *ngIf="form.controls['confirmacao'].hasError('required')">
+										Campo obrigatório
+									</mat-error>
+									</mat-form-field>
+								</div>
+								<div fxFlex="100" fxLayout="row" fxLayoutAlign="space-between">
+									<button mat-raised-button color="primary" [disabled]="!form.valid">Salvar</button>
+									<button mat-raised-button color="warn" routerLink="/main/usuario/consulta">Cancelar</button>
+								</div>
+							</form>
 							```
 							</script>
 						</div>
@@ -363,46 +547,63 @@
 					<p class="font-min fragment" align="justify">
 						Criando uma validação customizada, como esta é um pouco mais complexa, abaixo o código e irei explicar:
 					</p>
-					<p class="font-min fragment" align="justify">
-						Vamos inserir algumas mensagens de erro para cada campo?
-						<div data-markdown class="fragment" >
-							<script type="text/template">
-							```
-							import {FormGroup} from '@angular/forms';
-							export class EqualsPasswordValidator {
-								public static validate(firstField, secondField) {
-									return (formGroup: FormGroup) => {       
-									(formGroup.controls && formGroup.controls[firstField].value == formGroup.controls[secondField].value) 
-										? formGroup.controls[secondField].setErrors(formGroup.controls[secondField].getError('required') ? {required: {valid:false}} : null) :
-										formGroup.controls[secondField].setErrors({passwordEquals: {valid: false}});
-									}
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						import {FormGroup} from '@angular/forms';
+						export class EqualsPasswordValidator {
+							public static validate(firstField, secondField) {
+								return (formGroup: FormGroup) => {       
+								(formGroup.controls && formGroup.controls[firstField].value == formGroup.controls[secondField].value) 
+									? formGroup.controls[secondField].setErrors(formGroup.controls[secondField].getError('required') ? {required: {valid:false}} : null) :
+									formGroup.controls[secondField].setErrors({passwordEquals: {valid: false}});
 								}
 							}
-							```
-							</script>
-						</div>
-					</p>
+						}
+						```
+						</script>
+					</div>
 				</section>
 				
 
 				<section id="criarForm4">
 					<h5>Usando a validação</h5>
-					<p class="fragment" align="justify">
-						Abaixo o código que vamos usar para usar nossa validação:
+					<p class="font-min fragment" align="justify">
+						Abaixo o código que vamos usar para usar nossa validação, iremos atribuir como um parametro adicionar, pois ela é no nível do formGroup se fosse no nível do nosso control, iriamos usar como os validadores já vistos anteriormente.
 					</p>
 					<div data-markdown class="fragment" >
 						<script type="text/template">
 						```
-						constructor(private formBuilder: FormBuilder) {
-							this.form = formBuilder.group({
-								...
-							}, {validator: EqualsPasswordValidator.validate("field1", "field2")})
+						this.form = formBuilder.group({
+							id: [null],
+							nome: [null, Validators.required],
+							email: [null, Validators.compose([Validators.required, Validators.email])],
+							login: [null, Validators.required],
+							perfil: [null, Validators.required],
+							senha: [null, Validators.required],
+							confirmacao: [null, Validators.required]
+							}, {validator: EqualsPasswordValidator.validate("senha", "confirmacao")})
 						}
 						```
 						</script>
 					</div>
 				</section>
 
+				<section id="criarForm4">
+					<h5>Usando a validação HTML</h5>
+					<p class="font-min fragment" align="justify">
+						No arquivo formulario.component.html vamos usar nossa validação somente na confirmação de senha:
+					</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						<mat-error *ngIf="form.controls['confirmacao'].hasError('passwordEquals') && !form.controls['confirmacao'].hasError('required')">
+							Campo Confirmação não é igual ao campo Senha
+						</mat-error>
+						```
+						</script>
+					</div>
+				</section>
 
 
 				<section id="service">
@@ -465,12 +666,106 @@
 						</li>
 					</ul>
 				</section>
+
+
+				<section id="service1.1">
+					<h5 align="justify">Ações Service</h5>
+					<p class="font-min"> Ficando da seguinte forma nosso serviço</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						import { Injectable } from '@angular/core';
+
+						@Injectable()
+						export class UsuarioService {
+
+							private usuarios = [
+								{id: 1, nome: 'José da Silva', login: "jose", email: 'jose@ponto.com.br', perfil:"ALUNO"},
+								{id: 2, nome: 'Mariano das Neves', login: "mariano", email: 'marino@ponto.com.br', perfil:"ALUNO"},
+								{id: 3, nome: 'Magyver da Silva', login: "magyver", email: 'magyver@ponto.com.br', perfil:"ALUNO"},
+								{id: 4, nome: 'Irineu Nunes', login: "irineu", email: 'irineu@ponto.com.br', perfil:"ALUNO"},
+								{id: 5, nome: 'Carlos Silva', login: "carlos1", email: 'carlos@ponto.com.br', perfil:"ALUNO"}
+							];
+
+							constructor() { }
+							
+							adicionar(usuario){
+								let maxIdentifier = 0;
+								this.usuarios.forEach(usuario=>{
+								maxIdentifier < usuario.id ? maxIdentifier = usuario.id : maxIdentifier = maxIdentifier;
+								});
+								usuario.identifier = maxIdentifier + 1;
+								this.usuarios.push(usuario);
+							}
+
+							excluir(id){
+								let index = this.usuarios.findIndex(item=> item.id == id);
+								if(index > -1){
+								this.usuarios.splice(index, 1);
+								}
+							}
+
+							editar(usuario){
+								let index = this.usuarios.findIndex(item=> item.id == usuario.id);
+								if(index > -1){
+								this.usuarios[index] = usuario;
+								}
+							}
+
+							listar(){
+								return this.usuarios;
+							}
+
+							carregar(id){
+								return this.usuarios.find(item=> item.id == id);
+							}
+
+						}
+						```
+						</script>
+					</div>
+				</section>
 	
 				<section id="service2">
 						<h5 align="justify">Usar nosso service</h5>
 						<p>
-							Para usar nosso service precisamos importá-lo no módulo.
+							Para usar nosso service precisamos importá-lo no módulo, main.module
 						</p>
+						<div data-markdown class="fragment" >
+							<script type="text/template">
+							```
+							...
+							import { UsuarioService } from './usuario/usuario.service';
+							...
+							providers: [
+								....
+								UsuarioService
+							],
+							....
+							```
+							</script>
+						</div>
+				</section>
+
+
+
+				<section id="service2">
+					<h5 align="justify">Chamando nosso service</h5>
+					<p class="font-min" align="justify">
+						Para chamarmos nosso services é necessário que realizamos a injeção da sua classe no construtor:<br>
+						Então no arquivo src/app/main/usuario/consulta.component.ts
+					</p>
+					<div data-markdown class="fragment" >
+						<script type="text/template">
+						```
+						constructor(private _usuarioService: UsuarioService) { 
+							let listaUsuarios = _usuarioService.listar();
+							this.dataSource = new MatTableDataSource<any>(listaUsuarios);
+						}
+						....
+						```
+						</script>
+					</div>
 				</section>
 
 				<section id="fim">
